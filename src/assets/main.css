@@ -30,8 +30,9 @@ a,
   }
 
   #app {
-    display: grid;
+    //display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
+    @apply w-2/3;
   }
 }
