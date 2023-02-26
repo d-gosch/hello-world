@@ -1,8 +1,6 @@
 <script setup lang="ts">
-import PokemonApi from '@/components/PokemonApi.vue';
-
+import PokemonApi from "../components/PokemonApi.vue"
 </script>
 <template>
-    <PokemonApi/>
+    <PokemonApi />
 </template>
-<style></style>
