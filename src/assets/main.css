@@ -1,5 +1,7 @@
 @import './base.css';
-
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 #app {
   max-width: 1280px;
   margin: 0 auto;
@@ -28,8 +30,9 @@ a,
   }
 
   #app {
-    display: grid;
+    //display: grid;
     grid-template-columns: 1fr 1fr;
     padding: 0 2rem;
+    @apply w-2/3;
   }
 }
