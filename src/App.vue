@@ -13,7 +13,7 @@ const tiles = reactive([
 <template>
   <p>Hello World!</p>
   <PokemonApi RouterView="pokemon" />
-  <Tile v-for="tile in tiles" :title="tile.title" :description="tile.description" />
+  <Tile v-for="tile in tiles" :key="tile.title" :title="tile.title" :description="tile.description" />
 </template>
 
 <style scoped></style>
