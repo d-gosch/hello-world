@@ -4,7 +4,7 @@ import PokemonDetails from "@/components/PokemonDetails.vue";
 
 </script>
 <template>
-    <div class="grid gap-2">
+    <div class="grid gap-4">
         <PokemonSearch />
         <PokemonDetails />
     </div>
