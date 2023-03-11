@@ -5,7 +5,6 @@ import { computed, ref, watch } from 'vue';
 
 import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
 
-const filterEncounterLocations = ref('')
 const encounterLocations = ref<LocationAreaEncounter[] | undefined>()
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 const showEncounterDetail = ref(false)
