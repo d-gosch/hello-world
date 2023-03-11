@@ -2,6 +2,7 @@
 import { pokemonStore } from '@/stores/counter';
 import { PokemonClient, type LocationAreaEncounter, type Type } from 'pokenode-ts';
 import { ref, watch } from 'vue';
+import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
 
 const encounterLocations = ref<LocationAreaEncounter[] | undefined>()
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
@@ -19,22 +20,29 @@ watch(pokemonStore, getLocation)
 
 </script>
 <template>
-    <div v-if="pokemonStore">
+    <div v-if="pokemonStore" class="w-4/12">
         <h5 class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white"> #{{ pokemonStore.id }} {{
             pokemonStore.name }}</h5>
 
-        <div class="flex grid grid-cols-5 flex-col justify-between p-4 leading-normal">
-            <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
-                :src="pokemonStore.sprites.front_default ?? undefined" :alt="pokemonStore.name">
-            <span class="flex text-sm font-medium text-gray-900 dark:text-white"><span class="text-lg">
-                    Type: &nbsp;</span><span v-for="pokemonType in pokemonStore.types">
+        <img class="object-cover w-full rounded-t-lg h-96 md:h-auto md:w-48 md:rounded-none md:rounded-l-lg"
+            :src="pokemonStore.sprites.front_default ?? undefined" :alt="pokemonStore.name">
+
+        <div class="flex flex-col justify-between p-4 leading-normal">
+
+            <span class="flex grid grid-4 text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-lg">Type:</p>
+                <p v-for="pokemonType in pokemonStore.types">
                     {{ pokemonType?.type.name }}&nbsp;
-                </span></span>
-            <span class=" flex text-sm font-medium text-gray-900 dark:text-white"><span class="text-lg">Encounter:
-                    &nbsp;</span>
+                </p>
+            </span>
+            <span class=" flex text-sm font-medium text-gray-900 dark:text-white">
+                <p class="text-lg">Encounter location:</p>
                 <ul>
-                    <li v-for="encounterLocation in encounterLocations" :key="encounterLocation.location_area.name">{{
-                        encounterLocation.location_area.name }}</li>
+                    <li v-for="encounterLocation in encounterLocations" :key="encounterLocation.location_area.name">
+                        <PokemonEncounterLocations :location-name="encounterLocation.location_area.name" />
+
+                    </li>
+
                 </ul>
             </span>
             <span class="flex text-sm font-medium text-gray-900 dark:text-white"><span class="text-lg">Base Stats:
