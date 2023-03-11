@@ -1,9 +1,12 @@
 <script setup lang="ts">
-import { LocationClient, type LocationArea } from 'pokenode-ts';
+import { LocationClient, type LocationArea, type Region } from 'pokenode-ts';
 import { onMounted, ref } from 'vue';
 
-const props = defineProps({ locationName: { required: true, type: String } })
+const props = defineProps({
+    locationName: { required: true, type: String }
+})
 const location = ref<LocationArea | undefined>(undefined)
+
 const api = new LocationClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 async function getEncounterLocations() {
     await api
@@ -17,7 +20,9 @@ onMounted(() => {
 </script>
 <template>
     <div v-if="location">
-        <p v-for="encounterLocation in location.names">{{ encounterLocation.name }}</p>
+        <div v-for="encounterLocation in location.names">
+            {{ encounterLocation.name }}
+        </div>
     </div>
     <div v-else>Location not found</div>
 </template>
