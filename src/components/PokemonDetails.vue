@@ -2,7 +2,9 @@
 import { pokemonStore } from '@/stores/counter';
 import { PokemonClient, type LocationAreaEncounter, type Type } from 'pokenode-ts';
 import { ref, watch } from 'vue';
+
 import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
+
 
 const encounterLocations = ref<LocationAreaEncounter[] | undefined>()
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
@@ -40,9 +42,7 @@ watch(pokemonStore, getLocation)
                 <ul>
                     <li v-for="encounterLocation in encounterLocations" :key="encounterLocation.location_area.name">
                         <PokemonEncounterLocations :location-name="encounterLocation.location_area.name" />
-
                     </li>
-
                 </ul>
             </span>
             <span class="flex text-sm font-medium text-gray-900 dark:text-white"><span class="text-lg">Base Stats:
@@ -58,5 +58,4 @@ watch(pokemonStore, getLocation)
         </div>
     </div>
 </template>
-
 <style></style>
