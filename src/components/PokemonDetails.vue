@@ -45,18 +45,23 @@ watch(pokemonStore, getLocation)
                 <button class="text-lg underline font-bold" @click="showEncounterDetail = !showEncounterDetail">Encounter
                     location:</button>
                 <div v-if="toggleEncounterDetail" class="grid grid-cols-3 gap-4">
-                    <div v-for="encounterLocation in encounterLocations" :key="encounterLocation.location_area.name">
-                        <PokemonEncounterLocations :location-name="encounterLocation.location_area.name" />
+                    <div v-if="encounterLocations?.length">
+                        <PokemonEncounterLocations v-for="encounterLocation in encounterLocations"
+                            :key="encounterLocation.location_area.name"
+                            :location-name="encounterLocation.location_area.name" />
                     </div>
+                    <div v-else>No locations</div>
                 </div>
             </div>
-            <div class="grid grid-cols-3 gap-4 text-sm font-medium text-gray-900 dark:text-white">
+            <div class="text-sm font-medium text-gray-900 dark:text-white">
                 <p class="text-lg underline font-bold">Base Stats:</p>
-                <div class="col-span-2 grid grid-cols-3 gap-4">
-                    <div v-for="baseStat in pokemonStore.stats">
-                        <span>{{ baseStat.stat.name }}</span>
-                        <span>{{ baseStat.base_stat }}</span>
-                    </div>
+                <div class="col-span-2 table-auto">
+                    <tbody>
+                        <tr v-for="baseStat in pokemonStore.stats">
+                            <td>{{ baseStat.stat.name }}</td>
+                            <td>{{ baseStat.base_stat }}</td>
+                        </tr>
+                    </tbody>
                 </div>
             </div>
             <div class="text-sm font-medium text-gray-900 dark:text-white">
