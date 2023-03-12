@@ -19,10 +19,10 @@ onMounted(() => {
 })
 </script>
 <template>
-    <div v-if="location">
+    <button v-if="location">
         <div v-for="encounterLocation in location.names">
             {{ encounterLocation.name }}
         </div>
-    </div>
+    </button>
     <div v-else>Location not found</div>
 </template>

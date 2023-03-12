@@ -12,3 +12,4 @@ export const useCounterStore = defineStore('counter', () => {
   return { count, doubleCount, increment }
 })
 export const pokemonStore = ref<Pokemon | undefined>(undefined)
+export const locationStore = ref('')
