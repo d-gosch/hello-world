@@ -7,7 +7,6 @@ import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
 import LocationDetails from './LocationDetails.vue';
 
 const location = ref('')
-const encounterLocations = ref<LocationAreaEncounter[] | undefined>()
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 const apiLocationClient = new LocationClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 const locations = ref<LocationArea[] | undefined>(undefined)
