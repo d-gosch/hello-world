@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { pokemonStore } from '@/stores/counter';
-import { LocationClient, PokemonClient, type LocationArea, type LocationAreaEncounter, type Type } from 'pokenode-ts';
+import { LocationClient, PokemonClient, type LocationArea, type LocationAreaEncounter, type PokemonSpecies, type Type } from 'pokenode-ts';
 import { computed, onMounted, ref, watch } from 'vue';
 
 import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
@@ -9,6 +9,7 @@ import LocationDetails from './LocationDetails.vue';
 const location = ref('')
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 const apiLocationClient = new LocationClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
+const species = ref<PokemonSpecies | undefined>(undefined)
 const locations = ref<LocationArea[] | undefined>(undefined)
 const showEncounterDetail = ref(false)
 const toggleEncounterDetail = computed(() => {
@@ -23,11 +24,18 @@ async function getLocation() {
         })
         .catch((error) => console.log(error)) : 'No Location yet!'
 }
+async function getSpecies() {
+    pokemonStore.value ? await api.getPokemonSpeciesByName(pokemonStore.value.species.name)
+        .then((data) => species.value = data)
+        .catch((error) => console.log(error)) : 'No Location yet!'
+}
 
 
 watch(pokemonStore, getLocation)
+watch(pokemonStore, getSpecies)
 onMounted(() => {
     getLocation()
+    getSpecies()
 })
 
 
@@ -50,10 +58,16 @@ onMounted(() => {
                     </p>
                 </div>
                 <div class="text-sm font-medium text-gray-900 dark:text-white">
-                    <button class="text-lg underline font-bold"
-                        @click="showEncounterDetail = !showEncounterDetail">Encounter
-                        location:</button>
-                    <div v-if="toggleEncounterDetail" class="flex flex-col items-start">
+                    <p class="text-lg underline font-bold">Encounter
+                        location:
+                        <button
+                            class="py-1 px-1 mr-2 mb-1 text-xs font-thin text-gray-900 focus:outline-none bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-4 focus:ring-gray-200 dark:focus:ring-gray-700 dark:bg-gray-800 dark:text-gray-400 dark:border-purple-700 dark:hover:text-white dark:hover:bg-purple-700"
+                            @click="
+                                showEncounterDetail = !showEncounterDetail"><span
+                                v-if="!showEncounterDetail">expand</span> <span v-else>collapse</span> </button>
+
+                    </p>
+                    <div v-if="toggleEncounterDetail" class=" grid grid-cols-3 gap-2 flex-col items-start">
                         <PokemonEncounterLocations @click="location = encounterLocation.name" v-if="locations?.length"
                             v-for="encounterLocation in locations" :key="encounterLocation.id"
                             :location="encounterLocation" />
@@ -77,6 +91,11 @@ onMounted(() => {
                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                     <p class="text-lg underline font-bold">Base experience:</p>
                     <div>{{ pokemonStore.base_experience }} </div>
+                </div>
+                <div class="text-sm font-medium text-gray-900 dark:text-white">
+                    <p class="text-lg underline font-bold">Evolution:</p>
+                    <div>{{ species?.evolves_from_species.name }} </div>
+                    <div>{{ species?.generation.name }} </div>
                 </div>
             </div>
         </div>
