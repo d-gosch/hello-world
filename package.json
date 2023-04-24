@@ -15,6 +15,7 @@
     "format": "prettier --write src/"
   },
   "dependencies": {
+    "flowbite": "^1.6.4",
     "pinia": "^2.0.32",
     "pokenode-ts": "^1.17.0",
     "tailwindcss": "^3.2.7",
