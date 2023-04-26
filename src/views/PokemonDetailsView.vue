@@ -7,8 +7,6 @@ import PokemonEncounterLocations from '../components/PokemonEncounterLocations.v
 import LocationDetails from '../components/LocationDetails.vue';
 import PokemonTypeButton from '../components/PokemonTypeButton.vue';
 import { onBeforeRouteUpdate } from 'vue-router';
-import router from '@/router';
-import { before } from 'node:test';
 
 const pokemonData = ref()
 const location = ref('')
@@ -23,7 +21,7 @@ const toggleEncounterDetail = computed(() => {
         : false
 })
 
-async function fetchPokemonName(pokemonId: any) {
+async function fetchPokemonName(pokemonId: string) {
     try {
         const data = await api
             .getPokemonByName(pokemonId);
@@ -47,11 +45,10 @@ async function getSpecies() {
 
 onBeforeRouteUpdate(async (to, from) => {
     if (to.params.pokemonId !== from.params.pokemonId) {
-        pokemonData.value = await fetchPokemonName(to.params.pokemonId)
+        const { pokemonId } = to.params
+        const id = typeof pokemonId === "string" ? pokemonId : pokemonId[0]
+        pokemonData.value = await fetchPokemonName(to.params.pokemonId as string)
     }
-    console.log(to)
-    console.log(from)
-
 })
 watch(pokemonStore, getLocation)
 watch(pokemonStore, getSpecies)
