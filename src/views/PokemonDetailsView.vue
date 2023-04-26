@@ -3,9 +3,14 @@ import { pokemonStore } from '@/stores/counter';
 import { LocationClient, PokemonClient, type LocationArea, type LocationAreaEncounter, type PokemonSpecies, type Type } from 'pokenode-ts';
 import { computed, onMounted, ref, watch } from 'vue';
 
-import PokemonEncounterLocations from './PokemonEncounterLocations.vue';
-import LocationDetails from './LocationDetails.vue';
+import PokemonEncounterLocations from '../components/PokemonEncounterLocations.vue';
+import LocationDetails from '../components/LocationDetails.vue';
+import PokemonTypeButton from '../components/PokemonTypeButton.vue';
+import { onBeforeRouteUpdate } from 'vue-router';
+import router from '@/router';
+import { before } from 'node:test';
 
+const pokemonData = ref()
 const location = ref('')
 const api = new PokemonClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
 const apiLocationClient = new LocationClient({ cacheOptions: { maxAge: 5000, exclude: { query: false } } })
@@ -17,6 +22,16 @@ const toggleEncounterDetail = computed(() => {
         ? true
         : false
 })
+
+async function fetchPokemonName(pokemonId: any) {
+    try {
+        const data = await api
+            .getPokemonByName(pokemonId);
+        pokemonStore.value = data
+    } catch (error) {
+        console.error(error)
+    }
+}
 async function getLocation() {
     pokemonStore.value ? await api.getPokemonLocationAreaById(pokemonStore.value.id)
         .then(async (data) => {
@@ -30,7 +45,14 @@ async function getSpecies() {
         .catch((error) => console.log(error)) : 'No Location yet!'
 }
 
+onBeforeRouteUpdate(async (to, from) => {
+    if (to.params.pokemonId !== from.params.pokemonId) {
+        pokemonData.value = await fetchPokemonName(to.params.pokemonId)
+    }
+    console.log(to)
+    console.log(from)
 
+})
 watch(pokemonStore, getLocation)
 watch(pokemonStore, getSpecies)
 onMounted(() => {
@@ -50,12 +72,12 @@ onMounted(() => {
                 :src="pokemonStore.sprites.front_default ?? undefined" :alt="pokemonStore.name">
 
             <div class="flex flex-col justify-between p-4 leading-normal">
-
-                <div class="grid grid-4 text-sm font-medium text-gray-900 dark:text-white">
+                <div class="text-sm font-medium text-gray-900 dark:text-white">
                     <p class="text-lg underline font-bold">Type:</p>
-                    <p v-for="pokemonType in pokemonStore.types">
-                        {{ pokemonType?.type.name }}&nbsp;
-                    </p>
+
+
+                    <PokemonTypeButton @click="" :pokemon-type="pokemonType" v-for="pokemonType in pokemonStore.types">
+                    </PokemonTypeButton>
                 </div>
                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                     <p class="text-lg underline font-bold">Encounter
@@ -94,13 +116,14 @@ onMounted(() => {
                 </div>
                 <div class="text-sm font-medium text-gray-900 dark:text-white">
                     <p class="text-lg underline font-bold">Evolution:</p>
-                    <div>{{ species?.evolves_from_species.name }} </div>
+                    <div>{{ species?.evolves_from_species?.name }} </div>
                     <div>{{ species?.generation.name }} </div>
                 </div>
             </div>
         </div>
         <div class="col-span-8">
             <LocationDetails v-if="location" :location="location" @location="(msg) => location = msg"></LocationDetails>
+            <router-view name="locationDetails"></router-view>
         </div>
     </div>
 </template>
